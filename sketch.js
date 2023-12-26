@@ -48,6 +48,7 @@ function preload() {
   //loadFont('Granesta.otf');
   
   loadImage('materials/images/Stg_Secret.png');
+  loadImage('materials/images/Stg_Secret_Off.png');
   
   firstNodeSound = loadSound('materials/sounds/notification.mp3');
   lockedNodeSound = loadSound('materials/sounds/chain.mp3');
@@ -318,19 +319,19 @@ function mouseClicked() {
         lightGlitch.play();
 
         setTimeout(function () {
-          secretButton.elt.src = 'materials/images/Stg_Secret_Lc.png';
+          secretButton.elt.src = 'materials/images/Stg_Secret_Off.png';
         }, 50);
         setTimeout(function () {
           secretButton.elt.src = 'materials/images/Stg_Secret.png';
         }, 200);
         setTimeout(function () {
-          secretButton.elt.src = 'materials/images/Stg_Secret_Lc.png';
+          secretButton.elt.src = 'materials/images/Stg_Secret_Off.png';
         }, 350);
         setTimeout(function () {
           secretButton.elt.src = 'materials/images/Stg_Secret.png';
         }, 500);
         setTimeout(function () {
-          secretButton.elt.src = 'materials/images/Stg_Secret_Lc.png';
+          secretButton.elt.src = 'materials/images/Stg_Secret_Off.png';
         }, 700);
         setTimeout(function () {
           secretButton.elt.src = 'materials/images/Stg_Secret.png';
