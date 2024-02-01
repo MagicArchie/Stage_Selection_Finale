@@ -22,6 +22,7 @@ let lightGlitch;
 let codeEntryCounter;
 let CodeCheckc = true;
 let correctCodeEntered = true;
+let Comp = true;
 
 let backgroundMusic;
 let ProgressL = 999;
@@ -44,6 +45,8 @@ let secretButtonSize = nodeRadius * 2; // Set the size to match nodeRadius
 let secretButtonX;
 let secretButtonY;
 
+let oneUse = false;
+
 let input;
 let isEnteringCode = false;
 
@@ -52,12 +55,15 @@ function preload() {
   
   loadImage('materials/images/Stg_Secret.png');
   loadImage('materials/images/Stg_Secret_Off.png');
+  backgroundImage = loadImage('materials/images/Background14.jpg')
   
   firstNodeSound = loadSound('materials/sounds/notification.mp3');
   lockedNodeSound = loadSound('materials/sounds/chain.mp3');
   homeButtonSound = loadSound('materials/sounds/interface.mp3');
   lightGlitch = loadSound('materials/sounds/lightGlitch.wav');
   backgroundMusic = loadSound('materials/sounds/Mid-Page 1.2.mp3');
+  youWin = loadSound('materials/sounds/success-fanfare-trumpets-6185.mp3');
+  clickedRs = loadSound('materials/sounds/light-switch-156813.mp3');
 
   for (let i = 0; i < stageCount; i++) {
     const imagePath = `materials/images/Stg_${i + 1}I.png`;
@@ -106,6 +112,30 @@ function setup() {
 
   backgroundMusic.loop();
   backgroundMusic.setVolume(0.7); 
+  
+  Complete1 = createImg("materials/images/Background14.jpg", "completeImg");
+  Complete1.size(1400, 800);
+  Complete1.position(0, 0);
+  Complete1.mousePressed(hideComplition);
+  //Complete1.hide();
+  
+  Complete2 = createImg("materials/images/Completion8.png", "completeImg");
+  Complete2.size(450, 680);
+  Complete2.position(475, 60);
+  Complete2.mousePressed(hideComplition);
+  //Complete2.hide();
+  
+  Restart = createImg("materials/images/RstBt.png", "resetButton");
+  Restart.size(70, 70);
+  Restart.position(25, 110);
+  Restart.mousePressed(progressR);
+  Restart.hide();
+  
+  Return = createImg("materials/images/Rt_Button.png", "resetButton");
+  Return.size(80, 80);
+  Return.position(20, 20);
+  //Return.mousePressed(hideComplition);
+  Return.hide();
 
   // Initialize stages with adjusted random heights
   for (let i = 0; i < stageCount; i++) {
@@ -120,6 +150,10 @@ function setup() {
       x: marginX * (i + 1),
       interactive: true
     });
+  }
+  
+  for (let i = 0; i < stages.length; i++) { //-----------------------------
+    toggleNodeInteractivity(i, false);
   }
 
   // Position the secret button
@@ -141,6 +175,31 @@ function setup() {
 
   
   noLoop();
+}
+
+function hideComplition() {
+  Complete1.hide();
+  Complete2.hide();
+  Restart.show();
+  Return.show();
+  secretButton.show();
+  
+  setTimeout(function () {
+    Comp = false;
+    for (let i = 0; i < stages.length; i++) {
+      toggleNodeInteractivity(i, true);
+    }
+  }, 400);
+}
+
+function progressR() {
+  clickedRs.setVolume(0.1);
+  clickedRs.play();
+  
+  localStorage.clear();
+  setTimeout(function () {
+    window.location.href = 'https://magicarchie.github.io/Art-Puzzles/';
+  }, 400);
 }
 
 function drawSkillTree() {
@@ -187,16 +246,27 @@ function drawSkillTree() {
 
 function draw() {
   background(Bg_Img);
+  youWin.setVolume(0.1);
+  youWin.play();
 
   //textFont('Granesta', 100);
   if (ProgressL > LocationS) {
     LocationS = ProgressL;
     localStorage.setItem('PageL', LocationS); 
   }
+  
+  if (oneUse == false) {
+    secretButton.hide();
+    oneUse = true;
+  }
 
   // Draw the return button
   image(returnButtonImage, returnButtonX, returnButtonY, returnButtonSize, returnButtonSize);
 
+  fill(290, 120);
+  strokeWeight(2);
+  rect(15, 10, 90, 190, 130);
+  
   // Draw a rectangle behind the score text
   fill(255, 150);
   strokeWeight(3);
@@ -236,9 +306,6 @@ function draw() {
     isEnteringCode = false;
   }
 }
-
-
-
 
 function placeSecretButton() {
   let isOverlapping = true;
@@ -292,7 +359,8 @@ function mouseClicked() {
     mouseX > returnButtonX &&
     mouseX < returnButtonX + returnButtonSize &&
     mouseY > returnButtonY &&
-    mouseY < returnButtonY + returnButtonSize
+    mouseY < returnButtonY + returnButtonSize &&
+    Comp == false
   ) {
     homeButtonSound.play();
 
