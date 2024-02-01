@@ -152,7 +152,7 @@ function setup() {
     });
   }
   
-  for (let i = 0; i < stages.length; i++) { //-----------------------------
+  for (let i = 0; i < stages.length; i++) { 
     toggleNodeInteractivity(i, false);
   }
 
